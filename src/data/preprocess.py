@@ -46,16 +46,10 @@ def preprocess_data():
     preprocessor = ColumnTransformer(
         transformers=[
             (
-                "num",
-                StandardScaler(),
-                numerical_features
+                "num",StandardScaler(),numerical_features
             ),
             (
-                "cat",
-                OneHotEncoder(
-                    handle_unknown="ignore"
-                ),
-                categorical_features
+                "cat",OneHotEncoder(handle_unknown="ignore"),categorical_features
             )
         ]
     )
