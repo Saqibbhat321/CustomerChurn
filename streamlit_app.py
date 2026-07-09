@@ -6,7 +6,7 @@ st.set_page_config(
     page_icon="📉",
     layout="wide"
 )
-API_BASE_URL = "https://customer-churn-api.onrender.com"
+API_BASE_URL = "https://customerchurn-ui.onrender.com"
 API_URL = f"{API_BASE_URL}/predict"
 HEALTH_URL = f"{API_BASE_URL}/health"
 
@@ -98,7 +98,6 @@ with st.form("churn_form"):
         )
 
     submitted = st.form_submit_button("Predict Churn")
-
 if submitted:
     payload = {
         "gender": gender,
@@ -174,7 +173,7 @@ if submitted:
 
     except requests.exceptions.Timeout:
         st.error(
-            "The backend took too long to respond. If Render free tier is sleeping, wait 30–60 seconds and try again."
+            "The backend took too long to respond. On Render free tier, wait 30–60 seconds and try again."
         )
 
     except requests.exceptions.ConnectionError:
