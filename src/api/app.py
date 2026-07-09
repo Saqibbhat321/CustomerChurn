@@ -2,10 +2,7 @@ from fastapi import FastAPI, HTTPException
 
 from src.api.schemas import CustomerData
 from src.api.predictor import ChurnPredictor
-from src.utils.config import (
-    PROJECT_NAME,
-    API_VERSION
-)
+from src.utils.config import PROJECT_NAME, API_VERSION
 from src.utils.logger import get_logger
 
 logger = get_logger()
@@ -20,11 +17,7 @@ predictor = ChurnPredictor()
 
 @app.get("/")
 def home():
-
-    logger.info(
-        "Health check endpoint called."
-    )
-
+    logger.info("Root endpoint called.")
     return {
         "status": "healthy",
         "project": PROJECT_NAME,
@@ -32,19 +25,19 @@ def home():
     }
 
 
+@app.get("/health")
+def health_check():
+    logger.info("Health check endpoint called.")
+    return {"status": "ok"}
+
+
 @app.post("/predict")
 def predict(customer: CustomerData):
-
     try:
-
         return predictor.predict(customer)
 
     except Exception as e:
-
-        logger.error(
-            f"Prediction error: {e}"
-        )
-
+        logger.error(f"Prediction error: {e}")
         raise HTTPException(
             status_code=500,
             detail=str(e)
