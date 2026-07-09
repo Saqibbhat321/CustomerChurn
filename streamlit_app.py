@@ -1,17 +1,15 @@
 import streamlit as st
 import requests
 
-
 st.set_page_config(
     page_title="Customer Churn Prediction",
     page_icon="📉",
     layout="wide"
 )
 
-
-API_URL = "https://customerchurn-ui.onrender.com/predict"
-# Later for Render:
-# API_URL = "https://your-fastapi-service.onrender.com/predict"
+API_BASE_URL = "https://customerchurn-ui.onrender.com"
+API_URL = f"{API_BASE_URL}/predict"
+HEALTH_URL = f"{API_BASE_URL}/health"
 
 st.title("📉 Customer Churn Prediction System")
 st.markdown(
@@ -21,8 +19,26 @@ Fill in the customer details below and click **Predict Churn**.
 """
 )
 
-st.divider()
+# Sidebar
+st.sidebar.header("Project Info")
+st.sidebar.markdown("""
+**Model:** Random Forest Classifier  
+**Backend:** FastAPI  
+**Deployment:** Render  
+**Use case:** Predict telecom customer churn risk
+""")
 
+# Backend health check
+try:
+    health_response = requests.get(HEALTH_URL, timeout=10)
+    if health_response.status_code == 200:
+        st.sidebar.success("Backend API: Connected")
+    else:
+        st.sidebar.warning("Backend API: Reachable but unhealthy")
+except Exception:
+    st.sidebar.error("Backend API: Not reachable")
+
+st.divider()
 
 with st.form("churn_form"):
 
@@ -80,7 +96,6 @@ with st.form("churn_form"):
         )
 
     submitted = st.form_submit_button("Predict Churn")
-
 
 if submitted:
     payload = {
@@ -157,7 +172,7 @@ if submitted:
 
     except requests.exceptions.ConnectionError:
         st.error(
-            "Could not connect to FastAPI backend. Make sure your FastAPI server is running on http://127.0.0.1:8000"
+            "Could not connect to the deployed FastAPI backend. Please check whether the Render backend service is live."
         )
     except Exception as e:
         st.error(f"Unexpected error: {e}")
