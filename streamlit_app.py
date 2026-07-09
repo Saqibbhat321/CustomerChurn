@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 
-API_URL = "http://127.0.0.1:8000/predict"
+API_URL = "https://customerchurn-ui.onrender.com/predict"
 # Later for Render:
 # API_URL = "https://your-fastapi-service.onrender.com/predict"
 
