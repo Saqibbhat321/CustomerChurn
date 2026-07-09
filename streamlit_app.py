@@ -8,7 +8,7 @@ st.set_page_config(
 )
 API_BASE_URL = "https://customer-churn-api.onrender.com"
 API_URL = f"{API_BASE_URL}/predict"
-HEALTH_URL = f"{API_BASE_URL}/"
+HEALTH_URL = f"{API_BASE_URL}/health"
 
 st.title("📉 Customer Churn Prediction System")
 st.markdown(
@@ -29,13 +29,16 @@ st.sidebar.markdown("""
 
 # Backend health check
 try:
-    health_response = requests.get(HEALTH_URL, timeout=10)
+    health_response = requests.get(HEALTH_URL, timeout=20)
+
     if health_response.status_code == 200:
         st.sidebar.success("Backend API: Connected")
     else:
-        st.sidebar.warning("Backend API: Reachable but unhealthy")
-except Exception:
-    st.sidebar.error("Backend API: Not reachable")
+        st.sidebar.warning(
+            f"Backend API unhealthy: {health_response.status_code} | {health_response.text[:100]}"
+        )
+except Exception as e:
+    st.sidebar.error(f"Backend API not reachable: {e}")
 
 st.divider()
 
@@ -120,18 +123,7 @@ if submitted:
     }
 
     try:
-        with st.spinner("Checking backend and getting prediction..."):
-            # Wake/check backend first
-            health_check = requests.get(HEALTH_URL, timeout=30)
-
-            if health_check.status_code != 200:
-                st.error(
-                    f"Backend health check failed with status {health_check.status_code}. "
-                    "The backend may be waking up or unhealthy."
-                )
-                st.stop()
-
-            # Then call predict
+        with st.spinner("Getting prediction from model..."):
             response = requests.post(API_URL, json=payload, timeout=60)
 
         if response.status_code == 200:
@@ -182,8 +174,7 @@ if submitted:
 
     except requests.exceptions.Timeout:
         st.error(
-            "The backend took too long to respond. On Render free tier this often happens "
-            "when the API service is waking up from sleep. Wait 30–60 seconds and try again."
+            "The backend took too long to respond. If Render free tier is sleeping, wait 30–60 seconds and try again."
         )
 
     except requests.exceptions.ConnectionError:
