@@ -6,8 +6,7 @@ st.set_page_config(
     page_icon="📉",
     layout="wide"
 )
-
-API_BASE_URL = "https://customerchurn-ui.onrender.com"
+API_BASE_URL = "https://customer-churn-api.onrender.com"
 API_URL = f"{API_BASE_URL}/predict"
 HEALTH_URL = f"{API_BASE_URL}/health"
 
@@ -121,8 +120,19 @@ if submitted:
     }
 
     try:
-        with st.spinner("Getting prediction from model..."):
-            response = requests.post(API_URL, json=payload, timeout=30)
+        with st.spinner("Checking backend and getting prediction..."):
+            # Wake/check backend first
+            health_check = requests.get(HEALTH_URL, timeout=30)
+
+            if health_check.status_code != 200:
+                st.error(
+                    f"Backend health check failed with status {health_check.status_code}. "
+                    "The backend may be waking up or unhealthy."
+                )
+                st.stop()
+
+            # Then call predict
+            response = requests.post(API_URL, json=payload, timeout=60)
 
         if response.status_code == 200:
             result = response.json()
@@ -168,11 +178,18 @@ if submitted:
             try:
                 st.json(response.json())
             except Exception:
-                st.write(response.text)
+                st.text(response.text[:1000])
+
+    except requests.exceptions.Timeout:
+        st.error(
+            "The backend took too long to respond. On Render free tier this often happens "
+            "when the API service is waking up from sleep. Wait 30–60 seconds and try again."
+        )
 
     except requests.exceptions.ConnectionError:
         st.error(
-            "Could not connect to the deployed FastAPI backend. Please check whether the Render backend service is live."
+            "Could not connect to the FastAPI backend. Please check whether the backend Render service is live."
         )
+
     except Exception as e:
         st.error(f"Unexpected error: {e}")
