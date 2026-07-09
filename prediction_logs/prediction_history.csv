@@ -6,3 +6,5 @@ timestamp,prediction,churn_probability,confidence,gender,SeniorCitizen,Partner,D
 2026-06-28 15:44:14,Churn,0.602,Medium,Female,0,Yes,No,12,Yes,No,Fiber optic,No,No,No,No,Yes,Yes,Month-to-month,Yes,Electronic check,85.5,1026.0
 2026-06-28 15:44:37,Churn,0.602,Medium,Female,0,Yes,No,12,Yes,No,Fiber optic,No,No,No,No,Yes,Yes,Month-to-month,Yes,Electronic check,85.5,1026.0
 2026-06-28 15:45:07,No Churn,0.0159,High,Male,0,Yes,Yes,72,Yes,Yes,DSL,Yes,Yes,Yes,Yes,No,No,Two year,No,Bank transfer (automatic),48.25,3474.0
+2026-07-09 15:05:31,No Churn,0.425,Low,Female,1,Yes,No,7,No,No,DSL,No,No,No,No,No,No,Month-to-month,Yes,Electronic check,70.0,1000.0
+2026-07-09 15:14:26,No Churn,0.1584,High,Male,0,Yes,Yes,12,Yes,Yes,DSL,Yes,Yes,Yes,Yes,Yes,Yes,Month-to-month,Yes,Electronic check,70.0,1000.0
