@@ -8,7 +8,7 @@ st.set_page_config(
 )
 API_BASE_URL = "https://customer-churn-api.onrender.com"
 API_URL = f"{API_BASE_URL}/predict"
-HEALTH_URL = f"{API_BASE_URL}/health"
+HEALTH_URL = f"{API_BASE_URL}/"
 
 st.title("📉 Customer Churn Prediction System")
 st.markdown(
